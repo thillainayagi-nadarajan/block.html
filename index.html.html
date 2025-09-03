@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Decentralized Image Storage</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    #imageDisplay, .stored-image { max-width: 400px; margin-top: 20px; display: block; }
+    #walletAddress { margin-top: 10px; font-weight: bold; color: green; }
+  </style>
+</head>
+<body>
+  <h1>Decentralized Image Storage</h1>
+
+  <!-- Connect MetaMask Wallet -->
+  <button id="connectWallet">Connect Wallet</button>
+  <div id="walletAddress"></div>
+  <br/><br/>
+
+  <!-- Image Upload Section -->
+  <input type="file" id="fileInput" accept="image/*">
+  <button id="uploadButton">Upload Image</button>
+  <br/><br/>
+
+  <!-- View Previously Stored Images -->
+  <button id="viewImagesButton">View Stored Images</button>
+  <br/><br/>
+
+  <!-- Display Latest Uploaded Image -->
+  <img id="imageDisplay" alt="Uploaded image will appear here">
+
+  <!-- Container for Previously Stored Images -->
+  <h2>Previously Stored Images</h2>
+  <div id="storedImages"></div>
+
+  <!-- Include web3.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.7.3/dist/web3.min.js"></script>
+
+  <script>
+    let web3;
+    let userAccount;
+
+    // Connect MetaMask
+    async function connectWallet() {
+      if (typeof window.ethereum !== "undefined") {
+        try {
+          const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+          userAccount = accounts[0];
+          document.getElementById("walletAddress").innerText = "Connected: " + userAccount;
+          web3 = new Web3(window.ethereum);
+        } catch (error) {
+          console.error("User rejected connection", error);
+        }
+      } else {
+        alert("MetaMask not detected. Please install the MetaMask extension!");
+      }
+    }
+
+    // Dummy upload function (later connect to IPFS / Smart Contract)
+    function uploadImage() {
+      const fileInput = document.getElementById("fileInput");
+      if (fileInput.files.length === 0) {
+        alert("Please select an image first!");
+        return;
+      }
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById("imageDisplay").src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Dummy function to view stored images
+    function viewStoredImages() {
+      const storedImagesDiv = document.getElementById("storedImages");
+      storedImagesDiv.innerHTML = "";
+      const img = document.createElement("img");
+      img.src = document.getElementById("imageDisplay").src;
+      img.className = "stored-image";
+      storedImagesDiv.appendChild(img);
+    }
+
+    // Event Listeners
+    document.getElementById("connectWallet").addEventListener("click", connectWallet);
+    document.getElementById("uploadButton").addEventListener("click", uploadImage);
+    document.getElementById("viewImagesButton").addEventListener("click", viewStoredImages);
+  </script>
+</body>
+</html>
